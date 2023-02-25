@@ -108,9 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
           
           Navigator.pop(context);
           
-          bool isConnected = await _elemento.connect();
-
-          if (isConnected) {
+          if ( await _elemento.connect() ) {
             setState(() {
               _elemento.setOnline();
             });
@@ -119,7 +117,6 @@ class _MyHomePageState extends State<MyHomePage> {
               _elemento.setOffline();
             });
           }
-          
       }
 
   @override
