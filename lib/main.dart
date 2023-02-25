@@ -52,7 +52,7 @@ class Elemento {
   Text text ;
   Icon icon;
   String ip;
-  String port;
+  int port;
 
   Elemento({
     required this.ip, 
@@ -83,7 +83,7 @@ class Elemento {
     List<InternetAddress> addresses = await InternetAddress.lookup(ip);
     
     try {
-      await Socket.connect(addresses.first, 9102, timeout: Duration(seconds: 2));
+      await Socket.connect(addresses.first, port, timeout: Duration(seconds: 2));
       // Si la conexión es exitosa, establecer el estado del elemento como en línea
       return true;
     } catch (e) {
@@ -96,7 +96,7 @@ class Elemento {
 class _MyHomePageState extends State<MyHomePage> {
   final List<Elemento> _listItems = [];
   String _inputIp = '';
-  String _intputPort = '';
+  int _intputPort = 0;
   
   void _addItem() async {
           Elemento _elemento = Elemento(ip: _inputIp, port: _intputPort);
@@ -146,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
             context: context,
             builder: (BuildContext context) {
               _inputIp = '';
-              _intputPort = '';
+              _intputPort = 0;
               return Container(
                 padding: EdgeInsets.all(16),
                 child: Column(
@@ -156,11 +156,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       onChanged: (text) {
                         _inputIp = text;
                       },
+                      decoration: const InputDecoration(
+                        labelText: 'Introducir IP',
+                      ),
                     ),
                     TextField(
-                      onChanged: (text) {
-                        _intputPort = text;
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        _intputPort = int.parse(value);
                       },
+                      decoration: const InputDecoration(
+                        labelText: 'Introduce el puerto',
+                      ),
                     ),
                     SizedBox(height: 16),
                     ElevatedButton(
