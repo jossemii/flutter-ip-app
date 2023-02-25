@@ -145,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(widget.title),
       ),
@@ -173,39 +174,41 @@ class _MyHomePageState extends State<MyHomePage> {
                 builder: (BuildContext context) {
                   _inputIp = '';
                   _intputPort = 0;
-                  return Container(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextField(
-                          onChanged: (text) {
-                            _inputIp = text;
-                          },
-                          decoration: const InputDecoration(
-                            labelText: 'Introducir IP',
+                  return SingleChildScrollView(
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          TextField(
+                            onChanged: (text) {
+                              _inputIp = text;
+                            },
+                            decoration: const InputDecoration(
+                              labelText: 'Introducir IP',
+                            ),
+                            inputFormatters: [],
                           ),
-                          inputFormatters: [],
-                        ),
-                        TextField(
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            _intputPort = int.parse(value);
-                          },
-                          decoration: const InputDecoration(
-                            labelText: 'Introduce el puerto',
+                          TextField(
+                            keyboardType: TextInputType.number,
+                            onChanged: (value) {
+                              _intputPort = int.parse(value);
+                            },
+                            decoration: const InputDecoration(
+                              labelText: 'Introduce el puerto',
+                            ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(4),
+                            ],
                           ),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(4),
-                          ],
-                        ),
-                        SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: _addItem,
-                          child: Text('Agregar'),
-                        ),
-                      ],
+                          SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: _addItem,
+                            child: Text('Agregar'),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
