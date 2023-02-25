@@ -25,7 +25,18 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.green,
+        primarySwatch: const MaterialColor(0xffe5c601, {
+          50: Color(0xfffffde7),
+          100: Color(0xfffff9c4),
+          200: Color(0xfffff59d),
+          300: Color(0xfffff176),
+          400: Color(0xffffee58),
+          500: Color(0xffe5c601),
+          600: Color(0xffffca28),
+          700: Color(0xffffc107),
+          800: Color(0xffffb300),
+          900: Color(0xffffa000),
+        }),
       ),
       home: const MyHomePage(title: 'Flutter Node - Alpha version'),
     );
