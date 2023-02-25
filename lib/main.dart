@@ -119,6 +119,12 @@ class _MyHomePageState extends State<MyHomePage> {
           }
       }
 
+  void _clearItems() {
+    setState(() {
+      _listItems.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -139,53 +145,75 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context) {
-              _inputIp = '';
-              _intputPort = 0;
-              return Container(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      onChanged: (text) {
-                        _inputIp = text;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Introducir IP',
-                      ),
-                      inputFormatters: [],
-                    ),
-                    TextField(
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        _intputPort = int.parse(value);
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Introduce el puerto',
-                      ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(4)
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+      floatingActionButton: Column(
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  _inputIp = '';
+                  _intputPort = 0;
+                  return Container(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          onChanged: (text) {
+                            _inputIp = text;
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Introducir IP',
+                          ),
+                          inputFormatters: [],
+                        ),
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            _intputPort = int.parse(value);
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Introduce el puerto',
+                          ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(4)
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: _addItem,
+                          child: Text('Agregar'),
+                        ),
                       ],
                     ),
-                    SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: _addItem,
-                      child: Text('Agregar'),
-                    ),
-                  ],
-                ),
+                  );
+                },
               );
             },
-          );
-        },
-        tooltip: 'Añadir nuevo elemento',
-        child: const Icon(Icons.add),
+            tooltip: 'Añadir nuevo elemento',
+            child: const Icon(Icons.add),
+          ),
+          SizedBox(height: 16),
+          FloatingActionButton(
+            onPressed: _clearItems,
+            tooltip: 'Limpiar la lista',
+            child: const Icon(Icons.delete),
+          )
+        ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(onPressed: () {}, icon: const Icon(Icons.account_tree_outlined)),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.send)),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.account_balance_wallet)),
+          ],
+        ),
       ),
     );
   }
