@@ -158,7 +158,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
       floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          FloatingActionButton(
+            onPressed: _clearItems,
+            tooltip: 'Limpiar la lista',
+            child: const Icon(Icons.delete),
+          ),
+          const SizedBox(height: 16),
           FloatingActionButton(
             onPressed: () {
               showModalBottomSheet(
@@ -207,12 +214,6 @@ class _MyHomePageState extends State<MyHomePage> {
             tooltip: 'Añadir nuevo elemento',
             child: const Icon(Icons.add),
           ),
-          SizedBox(height: 16),
-          FloatingActionButton(
-            onPressed: _clearItems,
-            tooltip: 'Limpiar la lista',
-            child: const Icon(Icons.delete),
-          )
         ],
       ),
       bottomNavigationBar: BottomAppBar(
