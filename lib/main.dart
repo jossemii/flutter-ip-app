@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 void main() {
   runApp(const MyApp());
@@ -48,13 +49,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class Elemento {
-  Text text;
+  Text text ;
   Icon icon;
+  String ip;
+  String port;
 
-  Elemento({required this.text, this.icon = const Icon(Icons.offline_bolt)});
+  Elemento({
+    required this.ip, 
+    required this.port,
+    this.icon = const Icon(Icons.bolt), 
+    this.text = const Text('')
+    }) {
+      text = Text('$ip:$port');
+    }
 
   void setOnline() {
     icon = const Icon(Icons.offline_bolt, color: Colors.green,);
+  }
+
+  void setOffline() {
+    icon = const Icon(Icons.offline_bolt, color: Color.fromARGB(255, 175, 96, 76),);
   }
 
   ListTile render() {
@@ -63,24 +77,47 @@ class Elemento {
               title: text,
             );
   }
+
+  Future<bool> connect() async {
+    // Realizar consulta DNS inversa para obtener dirección IP
+    List<InternetAddress> addresses = await InternetAddress.lookup(ip);
+    
+    try {
+      await Socket.connect(addresses.first, 9102, timeout: Duration(seconds: 2));
+      // Si la conexión es exitosa, establecer el estado del elemento como en línea
+      return true;
+    } catch (e) {
+      // Si la conexión falla, establecer el estado del elemento como fuera de línea
+      return false;
+    }
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Elemento> _listItems = [];
-  String _inputText = '';
+  String _inputIp = '';
+  String _intputPort = '';
   
-
-  void _addItem() {
-          Elemento _elemento = Elemento(text: Text(_inputText));
+  void _addItem() async {
+          Elemento _elemento = Elemento(ip: _inputIp, port: _intputPort);
           setState(() {
               _listItems.add(_elemento);
           });
-          Future.delayed(const Duration(seconds: 3), () {
-              setState(() {
-                _elemento.setOnline();
-              });
-          });
+          
           Navigator.pop(context);
+          
+          bool isConnected = await _elemento.connect();
+
+          if (isConnected) {
+            setState(() {
+              _elemento.setOnline();
+            });
+          } else {
+            setState(() {
+              _elemento.setOffline();
+            });
+          }
+          
       }
 
   @override
@@ -108,7 +145,8 @@ class _MyHomePageState extends State<MyHomePage> {
           showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
-              _inputText = '';
+              _inputIp = '';
+              _intputPort = '';
               return Container(
                 padding: EdgeInsets.all(16),
                 child: Column(
@@ -116,7 +154,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     TextField(
                       onChanged: (text) {
-                        _inputText = text;
+                        _inputIp = text;
+                      },
+                    ),
+                    TextField(
+                      onChanged: (text) {
+                        _intputPort = text;
                       },
                     ),
                     SizedBox(height: 16),
