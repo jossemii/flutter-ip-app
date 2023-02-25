@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -159,6 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       decoration: const InputDecoration(
                         labelText: 'Introducir IP',
                       ),
+                      inputFormatters: [],
                     ),
                     TextField(
                       keyboardType: TextInputType.number,
@@ -168,6 +171,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       decoration: const InputDecoration(
                         labelText: 'Introduce el puerto',
                       ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(4)
+                      ],
                     ),
                     SizedBox(height: 16),
                     ElevatedButton(
