@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() {
   runApp(const MyApp());
@@ -92,18 +93,41 @@ class Elemento {
   }
 
   Future<bool> connect() async {
-    // Realizar consulta DNS inversa para obtener dirección IP
-    List<InternetAddress> addresses = await InternetAddress.lookup(ip);
-    
-    try {
-      await Socket.connect(addresses.first, port, timeout: Duration(seconds: 2));
-      // Si la conexión es exitosa, establecer el estado del elemento como en línea
-      return true;
-    } catch (e) {
-      // Si la conexión falla, establecer el estado del elemento como fuera de línea
+
+    if (kIsWeb)
+    {
+      try {
+        await http.get(Uri.parse('http://$ip:$port'));
+        // Si la solicitud es exitosa, establecer el estado del elemento como en línea
+        return true;
+      } catch (e) {
+        // Si la solicitud falla, establecer el estado del elemento como fuera de línea
+        return false;
+      }      
+    }
+
+    else if (Platform.isWindows)
+    {
+        // Realizar consulta DNS inversa para obtener dirección IP
+        List<InternetAddress> addresses = await InternetAddress.lookup(ip);
+        
+        try {
+          await Socket.connect(addresses.first, port, timeout: Duration(seconds: 2));
+          // Si la conexión es exitosa, establecer el estado del elemento como en línea
+          return true;
+        } catch (e) {
+          // Si la conexión falla, establecer el estado del elemento como fuera de línea
+          return false;
+        }      
+    }
+
+    else 
+    {
       return false;
     }
+
   }
+
 }
 
 class _MyHomePageState extends State<MyHomePage> {
