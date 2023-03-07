@@ -223,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(4),
+                              LengthLimitingTextInputFormatter(6),
                             ],
                           ),
                           SizedBox(height: 16),
