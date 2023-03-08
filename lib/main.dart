@@ -94,8 +94,7 @@ class Elemento {
 
   Future<bool> connect() async {
 
-    if (kIsWeb)
-    {
+    if (kIsWeb) {
       try {
         await http.get(Uri.parse('http://$ip:$port'));
         // Si la solicitud es exitosa, establecer el estado del elemento como en línea
@@ -104,10 +103,7 @@ class Elemento {
         // Si la solicitud falla, establecer el estado del elemento como fuera de línea
         return false;
       }      
-    }
-
-    else if (Platform.isWindows)
-    {
+    } else if (Platform.isWindows){
         // Realizar consulta DNS inversa para obtener dirección IP
         List<InternetAddress> addresses = await InternetAddress.lookup(ip);
         
@@ -119,13 +115,7 @@ class Elemento {
           // Si la conexión falla, establecer el estado del elemento como fuera de línea
           return false;
         }      
-    }
-
-    else 
-    {
-      return false;
-    }
-
+    } else{ return false; }
   }
 
 }
