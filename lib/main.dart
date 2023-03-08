@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+import 'elemento.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -39,13 +41,13 @@ class MyApp extends StatelessWidget {
           900: Color(0xffffa000),
         }),
       ),
-      home: const MyHomePage(title: 'Flutter Node - Alpha version'),
+      home: const IPList(title: 'Flutter Node - Alpha version'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class IPList extends StatefulWidget {
+  const IPList({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -59,94 +61,33 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<IPList> createState() => IPListState();
 }
 
-class Elemento {
-  Text text ;
-  Icon icon;
+class ElementoData {
   String ip;
   int port;
 
-  Elemento({
-    required this.ip, 
-    required this.port,
-    this.icon = const Icon(Icons.bolt), 
-    this.text = const Text('')
-    }) {
-      text = Text('$ip:$port');
-    }
-
-  void setOnline() {
-    icon = const Icon(Icons.offline_bolt, color: Colors.green,);
-  }
-
-  void setOffline() {
-    icon = const Icon(Icons.offline_bolt, color: Color.fromARGB(255, 175, 96, 76),);
-  }
-
-  ListTile render() {
-    return ListTile(
-              leading: icon,
-              title: text,
-            );
-  }
-
-  Future<bool> connect() async {
-
-    if (kIsWeb) {
-      try {
-        await http.get(Uri.parse('http://$ip:$port'));
-        // Si la solicitud es exitosa, establecer el estado del elemento como en línea
-        return true;
-      } catch (e) {
-        // Si la solicitud falla, establecer el estado del elemento como fuera de línea
-        return false;
-      }      
-    } else if (Platform.isWindows){
-        // Realizar consulta DNS inversa para obtener dirección IP
-        List<InternetAddress> addresses = await InternetAddress.lookup(ip);
-        
-        try {
-          await Socket.connect(addresses.first, port, timeout: Duration(seconds: 2));
-          // Si la conexión es exitosa, establecer el estado del elemento como en línea
-          return true;
-        } catch (e) {
-          // Si la conexión falla, establecer el estado del elemento como fuera de línea
-          return false;
-        }      
-    } else{ return false; }
-  }
-
+  ElementoData({required this.ip, required this.port});
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  final List<Elemento> _listItems = [];
+
+class IPListState extends State<IPList> {
+  final List<ElementoData> _elementos = [];
   String _inputIp = '';
   int _intputPort = 0;
   
   void _addItem() async {
-          Elemento _elemento = Elemento(ip: _inputIp, port: _intputPort);
           setState(() {
-              _listItems.add(_elemento);
+              _elementos.add(ElementoData(ip: _inputIp, port: _intputPort));
           });
           
           Navigator.pop(context);
-          
-          if ( await _elemento.connect() ) {
-            setState(() {
-              _elemento.setOnline();
-            });
-          } else {
-            setState(() {
-              _elemento.setOffline();
-            });
-          }
       }
 
   void _clearItems() {
     setState(() {
-      _listItems.clear();
+      _elementos.clear();
     });
   }
 
@@ -165,9 +106,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: ListView.builder(
-          itemCount: _listItems.length,
+          itemCount: _elementos.length,
           itemBuilder: (BuildContext context, int index) {
-            return _listItems[index].render();
+            final elemento = _elementos[index];
+            return Elemento(
+              ip: elemento.ip,
+              port: elemento.port,
+            );
           },
         ),
       ),
