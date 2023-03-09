@@ -79,10 +79,10 @@ class IPListState extends State<IPList> {
   
   void _addItem() async {
           setState(() {
-              _elementos.add(ElementoData(ip: _inputIp, port: _intputPort));
+              _elementos.add(
+                  ElementoData(ip: _inputIp, port: _intputPort)
+              );
           });
-          
-          Navigator.pop(context);
       }
 
   void _clearItems() {

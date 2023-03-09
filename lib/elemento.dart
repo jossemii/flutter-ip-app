@@ -21,28 +21,28 @@ class Elemento extends StatefulWidget {
 }
 
 class _ElementoState extends State<Elemento> {
-  late Icon icon;
-  late Text text;
+  late Icon _icon;
+  late Text _text;
 
   @override
   void initState() {
     super.initState();
-    icon = const Icon(Icons.bolt);
-    text = Text('${widget.ip}:${widget.port}');
+    _icon = const Icon(Icons.bolt);
+    _text = Text('${widget.ip}:${widget.port}');
     _reload();
   }
 
   void _reload() async {
     if (await connect()) {
       setState(() {
-        icon = const Icon(
+        _icon = const Icon(
           Icons.offline_bolt,
           color: Colors.green,
         );
       });
     } else {
       setState(() {
-        icon = const Icon(
+        _icon = const Icon(
           Icons.offline_bolt,
           color: Color.fromARGB(255, 175, 96, 76),
         );
@@ -50,37 +50,6 @@ class _ElementoState extends State<Elemento> {
     }
     // ignore: use_build_context_synchronously
     Navigator.pop(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Slidable(
-      endActionPane: const ActionPane(
-        motion: ScrollMotion(),
-        children: [
-         /*SlidableAction(
-            backgroundColor: Color(0xFF0392CF),
-            foregroundColor: Colors.white,
-            icon: Icons.refresh_outlined,
-            label: 'Save',
-            onPressed: _reload,
-          ),
-        */
-        ],
-      ),
-      child: Container(
-        color: Colors.white,
-        child: ListTile(
-          leading: const CircleAvatar(
-            backgroundColor: Colors.indigoAccent,
-            foregroundColor: Colors.white,
-            child: Text('bla bla bla'),
-          ),
-          title: text,
-          subtitle: const Text('SlidableDrawerDelegate'),
-        ),
-      ),
-    );
   }
 
   Future<bool> connect() async {
@@ -102,5 +71,32 @@ class _ElementoState extends State<Elemento> {
     } else {
       return false;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Slidable(
+      endActionPane: const ActionPane(
+        motion: ScrollMotion(),
+        children: [
+         /*SlidableAction(
+            backgroundColor: Color(0xFF0392CF),
+            foregroundColor: Colors.white,
+            icon: Icons.refresh_outlined,
+            label: 'Save',
+            onPressed: _reload,
+          ),
+        */
+        ],
+      ),
+      child: Container(
+        color: Colors.white,
+        child: ListTile(
+          leading: _icon,
+          title: _text,
+          subtitle: const Text('SlidableDrawerDelegate'),
+        ),
+      ),
+    );
   }
 }
