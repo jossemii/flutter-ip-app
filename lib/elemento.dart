@@ -67,6 +67,19 @@ class _ElementoState extends State<Elemento> {
         await Socket.connect(addresses.first, widget.port, timeout: const Duration(seconds: 2));
         return true;
       } catch (e) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Error de conexión"),
+            content: Text("No se pudo establecer una conexión con el host."),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("Aceptar"),
+              ),
+            ],
+          ),
+        );
         return false;
       }
     } else {
