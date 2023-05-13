@@ -60,7 +60,8 @@ class _ElementoState extends State<Elemento> {
       } catch (e) {
         return false;
       }
-    } else if (Platform.isWindows) {
+    } 
+    else if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
       try {
         final addresses = await InternetAddress.lookup(widget.ip);
         await Socket.connect(addresses.first, widget.port, timeout: const Duration(seconds: 2));
