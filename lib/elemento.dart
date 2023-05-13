@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -29,10 +31,14 @@ class _ElementoState extends State<Elemento> {
     super.initState();
     _icon = const Icon(Icons.bolt);
     _text = Text('${widget.ip}:${widget.port}');
-    _reload();
+    _reload(false);
+    Timer.periodic(const Duration(minutes: 1), (timer) {
+      print("Execute reload other time.");
+      _reload(true);
+    });
   }
 
-  void _reload() async {
+  void _reload(without_pob) async {
     if (await connect()) {
       setState(() {
         _icon = const Icon(
@@ -48,8 +54,10 @@ class _ElementoState extends State<Elemento> {
         );
       });
     }
-    // ignore: use_build_context_synchronously
-    Navigator.pop(context);
+  
+    if(!without_pob) {
+      Navigator.pop(context);
+    }
   }
 
   Future<bool> connect() async {
